@@ -8,5 +8,4 @@ srcDir        = "src"
 
 
 # Dependencies
-requires "nim >= 1.6.0" # need some bug fixes
-requires "https://github.com/disruptek/assume >= 0.4.0"
+requires "nim >= 1.7.3" # need some bug fixes
