@@ -109,7 +109,7 @@ proc filter*(f: NodeFilter; n: NimNode): NimNode =
     for kid in items(n):
       result.add filter(f, kid)
 
-func applyLineInfo*(n, info: NimNode): NimNode =
+proc applyLineInfo*(n, info: NimNode): NimNode =
   ## Produce a copy of `n` with line information from `info` applied to it and
   ## its children.
   let pred = proc(n: NimNode): NimNode =
@@ -119,7 +119,7 @@ func applyLineInfo*(n, info: NimNode): NimNode =
       result.add c.applyLineInfo(info)
   result = filter(pred, n)
 
-func getTypeSkip*(n: NimNode, skip = Skippable): NimNode =
+proc getTypeSkip*(n: NimNode, skip = Skippable): NimNode =
   ## Obtain the type of `n`, while skipping through type kinds matching `skip`.
   ##
   ## See `Skippable` for supported type kinds.
@@ -134,7 +134,7 @@ func getTypeSkip*(n: NimNode, skip = Skippable): NimNode =
     else:
       discard "return as is"
 
-func getTypeInstSkip*(n: NimNode, skip = SkippableInst): NimNode =
+proc getTypeInstSkip*(n: NimNode, skip = SkippableInst): NimNode =
   ## Obtain the type instantiation of `n`, while skipping through type kinds matching `skip`.
   ##
   ## See `SkippableInst` for supported type kinds.
@@ -147,7 +147,7 @@ func getTypeInstSkip*(n: NimNode, skip = SkippableInst): NimNode =
     else:
       discard "return as is"
 
-func getTypeImplSkip*(n: NimNode, skip = Skippable): NimNode =
+proc getTypeImplSkip*(n: NimNode, skip = Skippable): NimNode =
   ## Obtain the type implementation of `n`, while skipping through type kinds matching `skip`.
   result = getTypeImpl:
     getTypeSkip(n, skip)
