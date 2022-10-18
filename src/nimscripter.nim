@@ -1,9 +1,9 @@
-import compiler / [nimeval, renderer, ast, llstream, lineinfos, idents, types]
+import compiler / [renderer, ast, llstream, lineinfos, idents, types]
 import compiler / options as copts
 import std/[os, json, options, strutils, macros, tables]
-import nimscripter/[expose, vmaddins, vmconversion]
+import nimscripter/[expose, vmaddins, vmconversion, nimeval]
 from compiler/vmdef import TSandboxFlag
-export options, Interpreter, ast, lineinfos, idents, nimEval, expose, VMParseError
+export options, Interpreter, ast, lineinfos, idents, nimeval, expose, VMParseError
 
 const defaultDefines = @{"nimscript": "true", "nimconfig": "true"}
 
@@ -123,7 +123,7 @@ proc loadScriptWithState*(
   if intr.isSome:
     intr.get.loadState(state)
 
-proc safeloadScriptWithState*(
+proc safeLoadScriptWithState*(
   intr: var Option[Interpreter];
   script: NimScriptFile or NimScriptPath;
   addins: VMAddins = VMaddins();
