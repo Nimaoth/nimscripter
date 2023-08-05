@@ -65,7 +65,7 @@ proc getLambda*(pDef: NimNode, realProcName: Nimnode = nil): NimNode =
      typ = typ[1]
     of ntyBuiltinTypeClass, ntyCompositeTypeClass:
       error("Cannot use type classes with nimscripter, make an alias.", pdef)
-    elif typ.kind == nnkEmpty: 
+    elif typ.kind == nnkEmpty:
      typ = newCall("typeof", def[^1])
     else: discard
     for idnt in def[0..^3]: # Get data from buffer in the vm proc
@@ -93,7 +93,7 @@ proc getLambda*(pDef: NimNode, realProcName: Nimnode = nil): NimNode =
         else:
           `idnt` = fromVm(typeof(`typ`), getNode(`vmArgs`, `argNum`))
 
-  let procName = 
+  let procName =
     if realProcName != nil:
       realProcName
     else:
@@ -135,7 +135,7 @@ proc addToProcCache(n: NimNode, moduleName: string) =
     impl = n.getImpl
   elif n.kind == nnkSym and n.symKind in {nskVar, nskLet, nskConst}:
     impl = n
-  else: 
+  else:
     impl = n
   for name, _ in procedureCache:
     if name == moduleName:
@@ -280,7 +280,7 @@ proc generateModuleImpl(n: NimNode, genSym = false): NimNode =
         # is not a generic proc dont need anything special
         result = makeVMProcSignature(n, genSym)
       else:
-        result = generateTypeclassProcSignatures(n):
+        result = generateTypeclassProcSignatures(n)
     of nnkSym:
       if n.symKind in {nskProc, nskFunc}:
         result = generateModuleImpl(n.getImpl, genSym)
@@ -311,7 +311,7 @@ proc generateModuleImpl(n: NimNode, genSym = false): NimNode =
     of nnkClosedSymChoice:
       result = newStmtList()
       for impl in n:
-        let impls = generateModuleImpl(impl, true) 
+        let impls = generateModuleImpl(impl, true)
         if impls.kind == nnkStmtList:
           for impl in impls:
             result.add impl
