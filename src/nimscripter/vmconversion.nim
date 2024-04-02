@@ -63,6 +63,10 @@ proc fromVm*(t: typedesc[SomeFloat], node: PNode): t =
 proc fromVm*(t: typedesc[string], node: PNode): string =
   if node.kind == nkStrLit:
     node.strVal
+  elif node.kind == nkRStrLit:
+    node.strVal
+  elif node.kind == nkTripleStrLit:
+    node.strVal
   else:
     raiseParseError(t)
 
