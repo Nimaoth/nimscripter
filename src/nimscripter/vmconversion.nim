@@ -123,6 +123,11 @@ proc hasRecCase(n: NimNode): bool =
     if son.kind == nnkRecCase:
       return true
 
+proc hasRecWhen(n: NimNode): bool =
+  for son in n:
+    if son.kind == nnkRecWhen:
+      return true
+
 proc baseSym(n: NimNode): NimNode =
   if n.kind == nnkSym:
     n
@@ -152,7 +157,7 @@ proc parseObject(body, vmNode, baseType: NimNode, offset: var int, fields: var s
       result.add body
 
   template addConstr(n: NimNode) =
-    if not n.hasRecCase:
+    if not n.hasRecCase and not n.hasRecWhen:
       let colons = collect(newSeq):
         for x in fields:
           let desymd = ident($x)
@@ -209,6 +214,15 @@ proc parseObject(body, vmNode, baseType: NimNode, offset: var int, fields: var s
   of nnkRecWhen:
     if body[0][0].kind == nnkIdent and body[0][0].eqIdent"false":
       result = newEmptyNode()
+
+    # Hack to support Option[T]
+    elif body[0][0].kind == nnkInfix and body[0][0][2].eqIdent"SomePointer":
+      if body[0][0][1].repr.startsWith("ptr "):
+        error("Nimscripter cannot support objects that use when statments. A proc that uses this object is the issue.", body)
+      else:
+        let recList = body[1][0]
+        stmtlistAdd parseObject(recList, vmNode, baseType, offset, fields)
+
     else:
       error("Nimscripter cannot support objects that use when statments. A proc that uses this object is the issue.", body)
   else: discard
