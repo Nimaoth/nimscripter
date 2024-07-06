@@ -1,4 +1,4 @@
-import std/[macros, macrocache, sugar, typetraits, importutils]
+import std/[macros, macrocache, sugar, typetraits, importutils, strutils]
 import compiler/[renderer, ast, idents]
 import typeit
 
